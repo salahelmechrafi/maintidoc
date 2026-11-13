@@ -1,0 +1,10 @@
+digraph I { rankdir=LR; node [shape=box, style="rounded,filled", fillcolor="#eef2f7", color="#1b3a5c", fontname="DejaVu Sans", fontsize=10]; edge[fontname="DejaVu Sans", fontsize=8];
+ inv [label="inventaire.csv\n(groupes, version,\néquipement)", fillcolor="#f5efd9"];
+ f [label="PDF / image"]; t [label="Type ?", shape=diamond];
+ ex [label="PyMuPDF\ntexte + blocs + images"]; ocr [label="OCR local\n(pdf_scanne, photos)"];
+ dec [label="Découpage\npassages, tableaux,\nfigures, pages"]; cap [label="Légende / description\nfigure (VLM hors ligne)"];
+ emb [label="Embeddings\ntexte BGE-M3\nimage CLIP"]; q [label="Qdrant\nvecteur + payload", shape=cylinder, fillcolor="#f5efd9"];
+ m [label="MinIO\nfichier + rendu page", shape=cylinder, fillcolor="#f5efd9"];
+ f -> t; t -> ex [label="pdf_texte"]; t -> ocr [label="pdf_scanne / image"]; ex -> dec; ocr -> dec; dec -> cap; dec -> emb; cap -> emb; emb -> q; f -> m;
+ inv -> dec [label="métadonnées jointes à chaque élément", style=dashed];
+}

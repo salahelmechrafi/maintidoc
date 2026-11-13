@@ -1,0 +1,27 @@
+# secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# artefacts de build
+scripts/corpus/build_tmp/
+scripts/corpus/build_fig/
+# modèles et données lourdes
+models/
+*.safetensors
+*.bin
+*.gguf
+qdrant_storage/
+minio_data/
+mlruns/
+# latex
+*.aux
+*.log
+*.toc
+*.out

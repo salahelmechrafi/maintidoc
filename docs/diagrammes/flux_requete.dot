@@ -1,0 +1,11 @@
+digraph R { rankdir=TB; nodesep=0.3; ranksep=0.3; node [shape=box, style="rounded,filled", fillcolor="#eef2f7", color="#1b3a5c", fontname="DejaVu Sans", fontsize=9.5]; edge[fontname="DejaVu Sans", fontsize=8];
+ a [label="1. Question + photo (technicien)"]; b [label="2. PC1 : identité, groupes, quotas", fillcolor="#c9a227"];
+ c [label="3. VLM : description photo, équipement probable"];
+ d [label="4. PC2 : recherche texte + image\nfiltrée par groupes, fusion RRF, reranker", fillcolor="#c9a227"];
+ e [label="5. Historique via MCP si utile (≤ 3 appels)"];
+ f [label="6. Rédaction réponse + citations (doc, page, élément)"];
+ g [label="7. PC3 : chaque citation existe,\nest autorisée et soutient l'affirmation", fillcolor="#c9a227"];
+ h [label="Réponse sourcée"]; i [label="Clarification / abstention"];
+ a->b->c->d->e->f->g; g->h [label="OK"]; g->i [label="sources insuffisantes,\ncontradiction, photo illisible"];
+ b->i [label="refus d'accès", style=dashed];
+}

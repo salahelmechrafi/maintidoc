@@ -1,0 +1,38 @@
+digraph A {
+  rankdir=TB; nodesep=0.35; ranksep=0.42; fontname="DejaVu Sans";
+  node [shape=box, style="rounded,filled", fillcolor="#eef2f7", color="#1b3a5c", fontname="DejaVu Sans", fontsize=10];
+  edge [fontname="DejaVu Sans", fontsize=8, color="#333333"];
+  ui   [label="Interface web (Streamlit)\nquestion + photo, approbation ticket"];
+  api  [label="API (FastAPI)\nauthentification, autorisation, quotas"];
+  orch [label="Orchestration (LangGraph + LangChain)\nétat, transitions, budgets, interruption humaine", fillcolor="#dde6f2"];
+  rag  [label="Recherche documentaire\ntexte (BGE-M3) + image (CLIP multilingue)\nfusion RRF + reranker"];
+  vlm  [label="Modèle vision-langage\nQwen2.5-VL-7B (quantifié)"];
+  mcpc [label="Client MCP"];
+  mcps [label="Serveur MCP maintenance\nhistorique, tickets ouverts, création"];
+  ver  [label="Vérification\ncitations + schéma Pydantic", fillcolor="#dde6f2"];
+  qd   [label="Qdrant\nvecteurs + métadonnées", shape=cylinder, fillcolor="#f5efd9"];
+  pg   [label="PostgreSQL\nmétadonnées, utilisateurs,\napprobations, journaux", shape=cylinder, fillcolor="#f5efd9"];
+  minio[label="MinIO\nPDF, pages, images", shape=cylinder, fillcolor="#f5efd9"];
+  ing  [label="Ingestion (hors ligne)\nPyMuPDF, OCR, découpage, embeddings"];
+  c1 [label="PC1 droits d'accès", shape=octagon, fillcolor="#c9a227", fontcolor="black", fontsize=9];
+  c2 [label="PC2 filtre groupes\navant recherche et à l'affichage", shape=octagon, fillcolor="#c9a227", fontsize=9];
+  c3 [label="PC3 citations vérifiées", shape=octagon, fillcolor="#c9a227", fontsize=9];
+  c4 [label="PC4 validation humaine\n(approval_token)", shape=octagon, fillcolor="#c9a227", fontsize=9];
+  c5 [label="PC5 contrôle serveur MCP\n+ idempotence", shape=octagon, fillcolor="#c9a227", fontsize=9];
+  ui -> api [label="question, photo, jeton"];
+  api -> c1 -> orch [label="requête + groupes"];
+  orch -> c2 -> rag [label="requête, filtre groupes"];
+  rag -> qd [dir=both, label="vecteurs"];
+  rag -> orch [label="extraits, figures, scores"];
+  orch -> vlm [label="photo + extraits"];
+  vlm -> orch [label="description, brouillon réponse"];
+  orch -> mcpc [label="appel outil"];
+  mcpc -> c5 -> mcps; mcps -> pg [dir=both];
+  mcps -> mcpc [label="historique / ticket"];
+  orch -> ver; ver -> c3 -> api [label="réponse sourcée JSON"];
+  orch -> c4 [label="brouillon ticket", style=dashed]; c4 -> ui [style=dashed, label="affichage pour approbation"];
+  api -> ui [label="réponse / clarification"];
+  ing -> minio; ing -> qd; ing -> pg [label="métadonnées"];
+  {rank=same; rag; vlm; mcpc}
+  {rank=same; qd; minio; pg; mcps}
+}

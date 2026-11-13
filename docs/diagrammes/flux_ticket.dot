@@ -1,0 +1,8 @@
+digraph T { rankdir=LR; nodesep=0.3; node [shape=box, style="rounded,filled", fillcolor="#eef2f7", color="#1b3a5c", fontname="DejaVu Sans", fontsize=9.5]; edge[fontname="DejaVu Sans", fontsize=8];
+ a [label="Demande de ticket"]; b [label="Brouillon\n(équipement, titre,\ndescription, sources)"];
+ c [label="Interruption LangGraph\naffichage contenu exact"]; d [label="PC4 Approbation\nhumaine", shape=diamond, fillcolor="#c9a227"];
+ e [label="approval_token =\nsigné(user, hash contenu, expiration)"];
+ f [label="create_ticket via MCP\n+ clé d'idempotence"]; g [label="PC5 serveur MCP :\ndroits, jeton, hash,\ndoublon ?", fillcolor="#c9a227"];
+ h [label="Ticket créé\n(TK-xxxx)"]; x [label="Annulé / modifié\n=> nouvelle validation"];
+ a->b->c->d; d->e [label="approuvé"]; d->x [label="refusé / modifié"]; x->b [style=dashed]; e->f->g->h; g->h [label="même clé : renvoie le ticket existant", style=dashed];
+}
